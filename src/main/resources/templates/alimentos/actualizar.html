@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<div th:replace="fragments :: head"></div>
+<div th:replace="fragments :: nav"></div>
+    <body>
+
+        <div class="container">
+            <form class="py-5" action="#" th:action="@{/alimentos/actualizar(id=${alimento.getId()})}" th:object="${alimento}" method="post">
+                <div class="form-group">
+                    <label for="nombre">
+                        Nombre
+                    </label>
+                    <input type="text" class="form-control" id="nombre"
+                           th:field="*{nombre}" th:value="${alimento.getNombre()}"
+                           aria-describedby="nombreHelp">
+                    <small id="nombreHelp" class="form-text text-muted">
+                        Nombre del alimento
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="precio">
+                        Precio
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="material-icons">
+                                    attach_money
+                                </i>
+                            </div>
+                        </div>
+                        <input type="number" class="form-control" id="precio"
+                               th:field="*{precio}"
+                               aria-describedby="precioHelp"
+                               th:value="${alimento.getPrecio()}"
+                               min="1.00" step="0.01">
+                    </div>
+                    <small id="precioHelp" class="form-text text-muted">
+                        Precio del alimento
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="descripcion">
+                        Descripción
+                    </label>
+                    <input type="text" class="form-control" id="descripcion"
+                           th:field="*{descripcion}" th:value="${alimento.getDescripcion()}"
+                           aria-describedby="descripcionHelp">
+                    <small id="descripcionHelp" class="form-text text-muted">
+                        Descripción del alimento
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="categoria">Categoria</label>
+                    <select class="form-control" id="categoria" th:field="*{categoria}">
+                        <option th:each="categoria: ${categorias}"
+                        th:value="${categoria.getId()}" th:text="${categoria.getNombre()}"
+                        th:selected="${categoria.getId()==currentCategoryId}">
+                        </option>
+                    </select>
+                    <small id="categoriaHelp" class="form-text text-muted">
+                        Categoría del alimento
+                    </small>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    Actualizar
+                </button>
+            </form>
+        </div>
+        <script>
+            feather.replace()
+        </script>
+    </body>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</html>

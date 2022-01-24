@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+    <div th:replace="fragments :: head"></div>
+    <div th:replace="fragments :: nav"></div>
+    <body>
+        <div class="container">
+            <div class="row py-5">
+                <div class="col-9">
+                    <div th:replace="fragments :: alert"></div>
+                </div>
+                <div class="col-9">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col"> Nombre </th>
+                                <th class="text-center" scope="col"> Descripción </th>
+                                <th th:if="${usuario.getRole().getName() == 'ROLE_ADMINISTRADOR'}"
+                                    class="text-center" scope="col" colspan="2"> Opciones </th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <tr th:each="categoria: ${categorias}">
+                                <td th:text="${categoria.nombre}">
+                                <td th:text="${categoria.descripcion}">
+                                <td th:if="${usuario.getRole().getName() == 'ROLE_ADMINISTRADOR'}">
+                                    <a type="button" class="btn btn-info"
+                                            th:href="@{/categorias/actualizar/{id}(id=${categoria.id})}">
+                                        Actualizar
+                                    </a>
+                                </td>
+                                <td th:if="${usuario.getRole().getName() == 'ROLE_ADMINISTRADOR'}">
+                                    <form th:action="@{/categorias/eliminar(id=${categoria.getId()})}" method="post">
+                                        <button type="submit" class="btn btn-danger">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-3">
+                    <div th:if="${usuario.getRole().getName() == 'ROLE_ADMINISTRADOR'}">
+                        <a href="/categorias/crear" class="text-white btn btn-success">
+                            Crear categoría <i data-feather="plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <div th:replace="fragments :: bootstrap-js"></div>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body>
+
+<nav th:replace="fragments :: nav"></nav>
+
+<div class="container">
+    <div class="row py-5">
+        <div class="mx-auto">
+            <div th:replace="fragments :: alert"></div>
+        </div>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Hora</th>
+                <th scope="col">Direccion</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="orden: ${ordenes}">
+                <td th:text="${orden.getHoraDeEntregaAproximada()}"></td>
+                <td th:text="${orden.getDireccionDeEntrega().getDireccion()}"></td>
+                <td th:text="${orden.getUsuario().getNombre()}"></td>
+                <td th:text="${orden.getCostoTotal()}"></td>
+                <td><a th:href="@{'/orden/detalles/' + ${orden.getIdOrden()}}" class="btn btn-success">Detalles</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="fragments :: bootstrap-js"></div>
+</body>
+</html>

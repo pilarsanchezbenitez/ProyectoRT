@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+    <div th:replace="fragments :: head"></div>
+    <div th:replace="fragments :: nav"></div>
+    <body>
+        <div class="container">
+            <div class="row py-5">
+                <div class="col-9">
+                    <div th:replace="fragments :: alert"></div>
+                </div>
+                <div class="col-9">
+                    <div class="row">
+                        <div th:each="alimento, iStat : ${alimentos}" class="col-4">
+                            <div class="card">
+                                <img class="card-img-top"
+                                     th:src="@{/imgs/{img}(img=${alimento.getImagen()})}">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${alimento.getNombre()}"></h5>
+                                    <p class="card-text" th:text="${alimento.getDescripcion()}"></p>
+                                    <div th:if="${usuario.getRole().getName() == 'ROLE_CLIENTE'}">
+                                        <button class="order text-white btn btn-success"
+                                            th:attr="data-id=${alimento.id},
+                                                     data-toReq=true,
+                                                     data-name=${alimento.nombre},
+                                                     data-price=${alimento.precio}">
+                                            <i class="show" data-feather="plus-square"></i>
+                                        </button>
+                                    </div>
+                                    <div th:if="${usuario.getRole().getName() == 'ROLE_ADMINISTRADOR'}" class="btn-group">
+                                        <button type="button" class="btn btn-info dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Opciones
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item"
+                                               th:href="@{/alimentos/actualizar/{id}(id=${alimento.id})}">
+                                               Actualizar
+                                            </a>
+                                            <a class="dropdown-item delete"
+                                               th:attr="data-id=${alimento.id}"
+                                               href="#">
+                                               Eliminar
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div th:if="${usuario.getRole().getName() == 'ROLE_ADMINISTRADOR'}">
+                        <a href="/alimentos/crear" class="text-white btn btn-success">
+                            Crear alimento <i data-feather="plus"></i>
+                        </a>
+                    </div>
+                    <div th:if="${usuario.getRole().getName() == 'ROLE_CLIENTE'}">
+                        <h1> Carrito </h1>
+                        <p class="font-weight-lighter" id="price" data-price="0">
+
+                        </p>
+                        <p class="font-weight-light" id="foodMsg">
+                            ¡Agrega alimentos al carrito!
+                        </p>
+                        <ul id="carrito"> </ul>
+                        <a hidden id="order" type="button" class="btn btn-info">
+                            Confirmar orden
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <div th:replace="fragments :: bootstrap-js"></div>
+    <script type="text/javascript">
+        var ids = [];
+
+        function toggleFood(id, name, foodPrice) {
+            if (ids.includes(id)) {
+                const index = ids.indexOf(id);
+                if (index > -1)
+                    ids.splice(index, 1);
+
+                var element;
+                $("ul li").each(function(li) {
+                    if ($(this).attr("data-id") == id)
+                        element = $(this);
+                });
+                element.remove();
+                if (ids.length == 0) {
+                    $("#order").prop("hidden", true);
+                    $("#price").prop("hidden", true);
+                    $("#foodMsg").prop("hidden", false);
+                }
+
+                var price = parseInt($("#price").attr("data-price"));
+                price = price - parseInt(foodPrice);
+                $("#price").attr("data-price", price);
+                $("#price").html("Total: $" + price + " MXN");
+            }
+            else {
+                $("#carrito").append(
+                    "<li data-id=" + id + " data-price=" + foodPrice + ">" + name + "</li>"
+                );
+                ids.push(id);
+                $("#order").prop("hidden", false);
+                $("#price").prop("hidden", false);
+                $("#foodMsg").prop("hidden", true);
+
+                var price = parseInt($("#price").attr("data-price"));
+                price = price + parseInt(foodPrice);
+                $("#price").attr("data-price", price);
+                $("#price").html("Total: $" + price + " MXN");
+            }
+        }
+
+        $(".order").on( "click", function(event) {
+            var id = $(this).attr("data-id");
+            var name = $(this).attr("data-name");
+            var price = $(this).attr("data-price");
+
+            $("#order").prop("hidden", false);
+            if ($(this).attr("data-toReq") == "true") {
+                $(this).html("<i data-feather='minus-square'></i>");
+                $(this).attr("data-toReq", "false")
+            }
+            else {
+                $(this).html("<i data-feather='plus-square'></i>");
+                $(this).attr("data-toReq", "true")
+            }
+
+            $(this).toggleClass("btn-success").toggleClass("btn-danger");
+            feather.replace();
+
+            toggleFood(id, name, price);
+        });
+        $("#order").on( "click", function( event ) {
+            $.ajax({
+                type: "POST",
+                contentType : 'application/json; charset=utf-8',
+                dataType : 'json',
+                url: "/orden/crear",
+                data: JSON.stringify(ids),
+            })
+              .done(function(msg) {
+                 console.log(msg);
+              });
+        });
+        $(".delete").on("click", function(event) {
+            var id = $(this).attr("data-id");
+            console.log("here");
+            $.ajax({
+                type: "POST",
+                contentType : 'application/json; charset=utf-8',
+                dataType : 'json',
+                url: "/alimentos/eliminar",
+                data: JSON.stringify(id),
+            })
+              .done(function(msg) {
+                 location.reload();
+              });
+        });
+    </script>
+</html>

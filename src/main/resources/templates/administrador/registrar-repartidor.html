@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<nav th:replace="fragments :: nav"></nav>
+
+<body>
+<div class="container">
+    <div class="row py-5">
+        <div th:if="${isAlert}" class="mx-auto col-dm-6">
+            <div th:replace="fragments :: alert"></div>
+        </div>
+        <div class="mx-auto col-md-6">
+            <div class="card">
+                <h4 class="card-header">Registrar nuevo repartidor</h4>
+                <form class="card-body" action="/administrador/registrar" th:object="${formRegistro}" method="POST" enctype="utf8" autocomplete="off">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="material-icons">alternate_email</i>
+                                </div>
+                            </div>
+                            <input id="email" class="form-control" type="email" th:field="*{email}" required
+                                   placeholder="ejemplo@mail.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="material-icons">person</i></div>
+                            </div>
+                            <input class="form-control" id="nombre" placeholder="Luis" required
+                                   th:field="*{nombre}" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido-paterno">Apellido Paterno</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="material-icons">people</i></div>
+                            </div>
+                            <input class="form-control" id="apellido-paterno" placeholder="Lopez" required
+                                   th:field="*{apellidoPaterno}" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido-materno">Apellido Materno</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="material-icons">people</i></div>
+                            </div>
+                            <input class="form-control" id="apellido-materno" placeholder="Pérez" required
+                                   th:field="*{apellidoMaterno}" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="material-icons">home</i></div>
+                            </div>
+                            <input class="form-control" id="direccion" placeholder="Calle #19 Colonia" required
+                                   th:field="*{direccion}" type="text">
+                        </div>
+                    </div>
+                    <button class="btn btn-success" type="submit">Registrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type='text/javascript'>
+    function checkMatchPassword() {
+        const passwordConf = document.getElementById('passwordConf');
+        const password = document.getElementById('password');
+        if (password.value !== passwordConf.value) {
+            passwordConf.setCustomValidity('Las contraseñas no coinciden.');
+        } else {
+            passwordConf.setCustomValidity('');
+        }
+    }
+</script>
+
+</body>
+<div th:replace="fragments :: bootstrap-js"></div>
+</html>
