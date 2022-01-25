@@ -1,0 +1,150 @@
+<!--Products -->
+
+<div class="container px-4 px-lg-5 mt-5">
+    <h3>
+        <button (click)="updateProductCategory()" style="float:right" type="button" class="btn btn-success btn sm">
+                    Ver por Categoría
+        </button> &nbsp;&nbsp;
+        <button (click)="cartV()" class="btn btn-outline-success" routerLink="/cart"><i class="fas fa-shopping-cart"></i>&nbsp;&nbsp;Ver Carrito
+                <span class="badge bg-dark text-white ms-1 rounded-pill"></span>
+        </button>
+    </h3>
+
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        <div class="col mb-5" *ngFor="let productWithImages of productsWithImages">
+            <div class="card h-100">
+                <!-- Product image-->
+                <img *ngFor="let img of productWithImages.productImages" class="card-img-top" src="assets/{{img.image}}" alt="{{productWithImages.producto.gtin}}">
+                <!-- Product details-->
+                <div class="card-body p-4">
+                    <div class="text-center">
+                        <!-- Product name-->
+                        <h5 class="fw-bolder">{{productWithImages.producto.product}}</h5>
+                        <!-- Product price-->
+                        <h5 class="fw-bolder">${{productWithImages.producto.price}}</h5>
+                    </div>
+                </div>
+                <!-- Product actions-->
+
+                <div class="card-footer text-center p-4 pt-0 border-top-0 bg-transparent">
+                    <button (click)="getDetail(productWithImages.producto.gtin)" type="button" class="btn btn-primary mt-auto">
+                        <i class="fas fa-gift"></i> Ver Detalle
+                    </button>
+                </div>
+                <div class="card-footer text-center p-4 pt-0 border-top-0 bg-transparent">
+                    &nbsp;&nbsp;
+                    <button (click)="getDetail(productWithImages.producto.gtin)" type="button" class="btn btn-outline-success mt-auto"> <i class="fas fa-cart-plus"></i>
+                        Añadir al Carrito
+                    </button> &nbsp;&nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Detail Modal-->
+<div class="modal" tabindex="-1" role="dialog" id="detail_product">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">{{product.product}}</h5>
+                <button (click)="closeDetail()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="modal-body">
+                <table class="table" style="width:100%">
+                    <tbody>
+                        <tr>
+                            <th>GTIN</th>
+                            <th>{{product.gtin}}</th>
+                        </tr>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>{{product.description}}</th>
+                        </tr>
+                        <tr>
+                            <th>Precio</th>
+                            <th>${{product.price}}</th>
+                        </tr>
+                        <tr>
+                            <th>Cantidad en Stock</th>
+                            <th>{{product.stock}}</th>
+                        </tr>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>{{category.category}}</th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <form [formGroup]="formularioQuantity" (ngSubmit)="addCart(product)">
+                                    <div class="form-group">
+                                        <label for="rate">Ingresa la cantidad de productos para agregar al carrito <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control marginForm" id="quantity" formControlName="quantity" placeholder="Productos...">
+                                        <div *ngIf="submitted && f.quantity.errors">
+                                            <div *ngIf="f.quantity.errors.required ">
+                                                <span class="text-danger">Seleccione una cantidad</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </th>
+                            <th>
+                                <button (click)="addCart(product)" type="button" class="btn btn-success" href="#"> <i class="fas fa-cart-plus"></i>
+                                Añadir al Carrito</button>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="cards-img">
+                    <div *ngFor="let img of images" class="card card-img" style="width: 18rem;">
+                        <img class="card-img-top" src="assets/{{img.image}}" alt="Card image cap">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button (click)="closeDetail()" type="button" class="btn btn-secondary" data-dismiss="modal"> Cerrar </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Category Modal-->
+<div class="modal" tabindex="-1" role="dialog" id="category_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Categoría</h5>
+                <button (click)="closeCategoryModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="formularioCategory" (ngSubmit)="onSubmitCategory()">
+                    <div class="form-group">
+                        <label for="rate">Selecciona la categoria que desea buscar<span class="text-danger">*</span></label>
+                        <select class="form-control" id="id_category" formControlName="id_category">
+                            <option value="0" disabled>Seleciona una categoria</option>
+                            <option *ngFor="let category of categories" [ngValue]="category.id_category">{{category.category}}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <br>
+                        <button type="submit" class="btn btn-success btn-block">Buscar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button (click)="closeCategoryModal()" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

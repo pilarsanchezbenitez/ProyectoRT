@@ -1,0 +1,206 @@
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h3>
+                &nbsp;&nbsp; {{product.product}}
+                <button (click)="updateProduct(product)" style="float:right" type="button" class="btn btn-success btn sm">
+                    Editar producto
+                    <i class="fas fa-edit"></i>
+                </button>
+            </h3>
+        </div>
+
+        <div class="card-body">
+            <table class="table" style="width:100%">
+                <tbody>
+                    <tr>
+                        <th>GTIN</th>
+                        <th>{{product.gtin}}</th>
+                    </tr>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>{{product.description}}</th>
+                    </tr>
+                    <tr>
+                        <th>Precio</th>
+                        <th>{{product.price}}</th>
+                    </tr>
+                    <tr>
+                        <th>Cantidad en Stock</th>
+                        <th>{{product.stock}}</th>
+                    </tr>
+                    <tr>
+                        <th>Categoría a la que pertenece</th>
+                        <td>
+                            {{category.category}} &nbsp;
+                            <button (click)="updateProductCategory()" type="button" class="btn btn-link btn-sm">Actualizar Categoría</button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer">
+            <button style="float:left;" (click)="uploadProductImage()" type="button" style="float: right;" class="btn btn-success btn-sm">
+                Agregar imagen <i class="fas fa-edit"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialos" id="product_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Producto</h5>
+                <button (click)="closeModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+
+            <div class="modal-body">
+                <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <label for="rate">Ingresa el codigo GTIN<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="gtin" formControlName="gtin" placeholder="GTIN..">
+                        <div *ngIf="submitted && f.gtin.errors">
+                            <div *ngIf="f.gtin.errors.required">
+                                <span class="text-danger">El GTIN es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa el nombre del producto<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="product" formControlName="product" placeholder="Producto ...">
+                        <div *ngIf="submitted && f.product.errors">
+                            <div *ngIf="f.product.errors.required">
+                                <span class="text-danger">El nombre de los productos es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa la descicripcion<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="description" formControlName="description" placeholder="Descripción ...">
+                        <div *ngIf="submitted && f.description.errors">
+                            <div *ngIf="f.description.errors.required">
+                                <span class="text-danger">La descirpciónes obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa el precio<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="price" formControlName="price" placeholder="$ Precio ...">
+                        <div *ngIf="submitted && f.price.errors">
+                            <div *ngIf="f.price.errors.required">
+                                <span class="text-danger">El precio es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa la cantidad de articulos en stock<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="stock" formControlName="stock" placeholder="Stock ...">
+                        <div *ngIf="submitted && f.stock.errors">
+                            <div *ngIf="f.stock.errors.required">
+                                <span class="text-danger">El número de articulos en stock es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <br>
+                        <p class="text-rigth"><span class="text-danger">*</span>Campos obligatorios</p>
+                        <button type="submit" class="btn btn-success btn-block">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="modal-footer">
+                <button (click)="closeModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="category_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Categoría</h5>
+                <button (click)="closeCategoryModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="formularioCategory" (ngSubmit)="onSubmitCategory()">
+                    <div class="form-group">
+                        <label for="rate">Selecciona la categoría a la que pertenece el producto<span class="text-danger">*</span></label>
+                        <select class="form-control" id="id_category" formControlName="id_category">
+                            <option value="0" disabled>Seleciona una categoría</option>
+                            <option *ngFor="let category of categories" [ngValue]="category.id_category">{{ category.category}}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <br>
+                        <button type="submit" class="btn btn-success btn-block">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button (click)="closeCategoryModal()" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Image modal-->
+
+<div class="modal" tabindex="-1" role="dialog" id="image_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Imagen</h5>
+                <button (click)="closeImageModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <label for="image">Imagen<span class="text-danger">*</span></label>
+                <div class="custom-file form-group">
+                    <input type="file" accept="image/*" class="custom-file-input" (change)="fileChangeEvent($event)">
+                    <ngx-photo-editor [imageChanedEvent]="imageChangedEvent" (imageCropped)="imageCropped($event)" [aspectRatio]="6/4" [viewMode]="0" [resizeToWidth]="500">
+                    </ngx-photo-editor>
+                </div>
+                <div>
+                    <br>
+                    <button (click)="onSubmitImage()" type="submit" class="btn btn-success btn-block">Cargar</button>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button (click)="closeImageModal()" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Images-->
+<div class="cards-img">
+    <div *ngFor="let img of images" class="card card-img" style="width: 18rem;">
+        <img class="card-img-top" src="assets/{{img.image}}" alt="Card image cap">
+        <div class="card-body text-center">
+            <button (click)="deleteProductImage(img.id_product_image)" type="button" class="btn btn-danger bt-sm"> 
+                <i class="fas fa-trash"></i>
+                Eliminar
+            </button>
+        </div>
+    </div>
+</div>

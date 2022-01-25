@@ -1,0 +1,199 @@
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <table class="table" style="width:100%">
+                <tbody>
+                    <tr>
+                        <th style="width:100%">
+                            <img src="{{ customer.image }}" width="125" height="150">
+                            <button (click)="updateCustomerImage()" type="button" class="btn btn-link btn-sm">Cambiar fotografía</button>
+                        </th>
+                        <td>
+                            <br>
+                            <h2>
+                                {{customer.name}}
+                            </h2>
+                            <h2>
+                                {{customer.surname}}
+                            </h2>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-body">
+            <table class="table" style="width:100%">
+                <tbody>
+                    <tr>
+                        <th>RFC</th>
+                        <td>{{customer.rfc}}</td>
+                    </tr>
+                    <tr>
+                        <th>Correo Electrónico</th>
+                        <td>{{customer.mail}}</td>
+                    </tr>
+                    <tr>
+                        <th>Domicilio</th>
+                        <td>{{customer.address}}</td>
+                    </tr>
+                    <tr>
+                        <th>Región a la que pertenece</th>
+                        <td>
+                            {{region.region}} &nbsp;
+                            <button (click)="updateCustomerRegion()" type="button" class="btn btn-link btn-sm">Actualizar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer">
+            <button style="float: left;" (click)="updateCustomer(customer)" type="button" class="btn btn-primary btn-sm">
+                Actualizar Datos <i class="fas fa-edit"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="customer_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Cliente</h5>
+                <button (click)="closeModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <label for="rate">Ingresa el nombre del Cliente<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="name" formControlName="name" placeholder="Nombre ...">
+                        <div *ngIf="submitted && f.name.errors">
+                            <div *ngIf="f.name.errors.required">
+                                <span class="text-danger">El nombre del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa el apellido<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="surname" formControlName="surname" placeholder="Apellido ...">
+                        <div *ngIf="submitted && f.surname.errors">
+                            <div *ngIf="f.surname.errors.required">
+                                <span class="text-danger">El apellido del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa el RFC<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="rfc" formControlName="rfc" placeholder="RFC ...">
+                        <div *ngIf="submitted && f.rfc.errors">
+                            <div *ngIf="f.rfc.errors.required">
+                                <span class="text-danger">El RCF del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa el correo electronico del Cliente<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="mail" formControlName="mail" placeholder="Correo electrónico ...">
+                        <div *ngIf="submitted && f.mail.errors">
+                            <div *ngIf="f.mail.errors.required">
+                                <span class="text-danger">El correo electrónico del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa la dirección <span class="text-danger">*</span></label>
+                        <textarea rows="2" class="form-control marginForm" id="address" formControlName="address"></textarea>
+                        <div *ngIf="submitted && f.address.errors">
+                            <div *ngIf="f.address.errors.required">
+                                <span class="text-danger">La dirección del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <br>
+                        <p class="text-rigth"><span class="text-danger">*</span>Campos oblogatorios</p>
+                        <button type="submit" class="btn btn-success btn-block">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button (click)="closeModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="region_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Región</h5>
+                <button (click)="closeRegionModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="formularioRegion" (ngSubmit)="onSubmitRegion()">
+                    <div class="form-group">
+                        <label for="rate">Selecciona la region a la que pertenece el Cliente<span class="text-danger">*</span></label>
+                        <select class="form-control" id="id_region" formControlName="id_region">
+                            <option value="0" disabled>Seleciona una región</option>
+                            <option *ngFor="let region of regions" [ngValue]="region.id_region">{{ region.region}}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <br>
+                        <button type="submit" class="btn btn-success btn-block">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button (click)="closeRegionModal()" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Image modal-->
+
+<div class="modal" tabindex="-1" role="dialog" id="image_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Imagen</h5>
+                <button (click)="closeImageModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <label for="image">Imagen<span class="text-danger">*</span></label>
+                <div class="custom-file form-group">
+                    <input type="file" accept="image/*" class="custom-file-input" (change)="fileChangeEvent($event)">
+                    <ngx-photo-editor [imageChanedEvent]="imageChangedEvent" (imageCropped)="imageCropped($event)" [aspectRatio]="5/6" [viewMode]="0" [resizeToWidth]="250">
+                    </ngx-photo-editor>
+                </div>
+                <div>
+                    <br>
+                    <button (click)="onSubmitImage()" type="submit" class="btn btn-success btn-block">Actualizar</button>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button (click)="closeImageModal()" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

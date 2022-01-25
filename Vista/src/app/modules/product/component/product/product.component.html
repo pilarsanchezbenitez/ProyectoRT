@@ -1,0 +1,123 @@
+<div class="container-fluid">
+    <div class="card-header">
+        <h3>
+            <i class="fas fa-gifts"></i>&nbsp;&nbsp; Productos
+            <button (click)="createProduct()" style=" float:right" type="button" class="btn btn-success bt-sm">
+                Agregar producto<i class="fas fa-plus"></i>
+            </button>
+        </h3>
+    </div>
+    <!--Body-->
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="text-center">GTIN</th>
+                        <th class="text-center">Producto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let product of products">
+                        <td class="text-center">{{product.gtin}}</td>
+                        <td class="text-center">{{product.product}}</td>
+                        <td>
+                            <button (click)="productDetail(product.gtin)" type="button" class="btn btn-primary bt-sm"> 
+                                <i class="fas fa-gift"></i>
+                                Ver Detalle
+                            </button> &nbsp;&nbsp;
+                            <button (click)="deleteProduct(product.id_product)" type="button" class="btn btn-danger bt-sm"> 
+                                <i class="fas fa-trash"></i>
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="product_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Producto</h5>
+                <button (click)="closeModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+
+            <div class="modal-body">
+                <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <label for="rate">Ingresa el codigo GTIN<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="gtin" formControlName="gtin" placeholder="GTIN..">
+                        <div *ngIf="submitted && f.gtin.errors">
+                            <div *ngIf="f.gtin.errors.required">
+                                <span class="text-danger">El GTIN es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa el nombre del producto<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="product" formControlName="product" placeholder="Producto ...">
+                        <div *ngIf="submitted && f.product.errors">
+                            <div *ngIf="f.product.errors.required">
+                                <span class="text-danger">El nombre de los productos es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa la descicripcion<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="description" formControlName="description" placeholder="Descripción ...">
+                        <div *ngIf="submitted && f.description.errors">
+                            <div *ngIf="f.description.errors.required">
+                                <span class="text-danger">La descirpciónes obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa el precio<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="price" formControlName="price" placeholder="$ Precio ...">
+                        <div *ngIf="submitted && f.price.errors">
+                            <div *ngIf="f.price.errors.required">
+                                <span class="text-danger">El precio es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa la cantidad de articulos en stock<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="stock" formControlName="stock" placeholder="Stock ...">
+                        <div *ngIf="submitted && f.stock.errors">
+                            <div *ngIf="f.stock.errors.required">
+                                <span class="text-danger">El número de articulos en stock es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Selecciona la categoria a la que pertenece el Producto<span class="text-danger">*</span></label>
+                        <select class="form-control" id="id_category" formControlName="id_category">
+                            <option value="0" disabled>Seleciona una categoría</option>
+                            <option *ngFor="let category of categories" [ngValue]="category.id_category">{{ category.category}}</option>
+                        </select>
+                        <div *ngIf="submitted && f.id_category.errors">
+                            <div *ngIf="f.id_category.errors.required">
+                                <span class="text-danger">La categoria del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <br>
+                        <p class="text-rigth"><span class="text-danger">*</span>Campos obligatorios</p>
+                        <button type="submit" class="btn btn-success btn-block">Registrar</button>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="modal-footer">
+                <button (click)="closeModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

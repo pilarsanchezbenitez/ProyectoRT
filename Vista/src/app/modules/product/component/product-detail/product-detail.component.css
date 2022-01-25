@@ -1,0 +1,9 @@
+.cards-img {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+}
+
+.card-img {
+    margin-right: 10px;
+}

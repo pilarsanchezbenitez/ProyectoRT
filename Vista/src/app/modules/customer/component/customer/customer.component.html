@@ -1,0 +1,118 @@
+<div class="container-fluid">
+    <div class="card-header">
+        <h3>
+            <i class="fas fa-th-large"></i>&nbsp;&nbsp; Clientes
+            <button (click)="createCustomer()" style=" float:right" type="button" class="btn btn-success bt-sm">Agregar cliente<i class="fas fa-plus"></i></button>
+        </h3>
+    </div>
+
+    <!--Body-->
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">RFC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let customer of customers">
+                        <td class="text-center">{{customer.name}} {{customer.surname}}</td>
+                        <td class="text-center">{{customer.rfc}}</td>
+                        <td>
+                            <button (click)="customerDetail(customer.rfc)" type="button" class="btn btn-primary bt-sm"> 
+                                <i class="fas fa-id-card"></i>Ver Detalle</button> &nbsp;&nbsp;
+                            <button (click)="deleteCustomer(customer.id_customer)" type="button" class="btn btn-danger bt-sm"> 
+                                <i class="fas fa-trash"></i>Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="customer_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Cliente</h5>
+                <button (click)="closeModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <label for="rate">Ingresa el nombre del Cliente<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="name" formControlName="name" placeholder="Nombre ...">
+                        <div *ngIf="submitted && f.name.errors">
+                            <div *ngIf="f.name.errors.required">
+                                <span class="text-danger">El nombre del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa el apellido<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="surname" formControlName="surname" placeholder="Apellido ...">
+                        <div *ngIf="submitted && f.surname.errors">
+                            <div *ngIf="f.surname.errors.required">
+                                <span class="text-danger">El apellido del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa el RFC<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="rfc" formControlName="rfc" placeholder="RFC ...">
+                        <div *ngIf="submitted && f.rfc.errors">
+                            <div *ngIf="f.rfc.errors.required">
+                                <span class="text-danger">El RCF del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa el correo electronico del Cliente<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="mail" formControlName="mail" placeholder="Correo electrónico ...">
+                        <div *ngIf="submitted && f.mail.errors">
+                            <div *ngIf="f.mail.errors.required">
+                                <span class="text-danger">El correo electrónico del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa la dirección <span class="text-danger">*</span></label>
+                        <textarea rows="2" class="form-control marginForm" id="address" formControlName="address"></textarea>
+                        <div *ngIf="submitted && f.address.errors">
+                            <div *ngIf="f.address.errors.required">
+                                <span class="text-danger">La dirección del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Selecciona la region a la que pertenece el Cliente<span class="text-danger">*</span></label>
+                        <select class="form-control" id="id_region" formControlName="id_region">
+                            <option value="0" disabled>Seleciona una región</option>
+                            <option *ngFor="let region of regions" [ngValue]="region.id_region">{{ region.region}}</option>
+                        </select>
+                        <div *ngIf="submitted && f.id_region.errors">
+                            <div *ngIf="f.id_region.errors.required">
+                                <span class="text-danger">La región del cliente es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <br>
+                        <p class="text-rigth"><span class="text-danger">*</span>Campos oblogatorios</p>
+                        <button type="submit" class="btn btn-success btn-block">Registrar</button>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="modal-footer">
+                <button (click)="closeModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

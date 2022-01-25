@@ -1,0 +1,101 @@
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h3>
+                &nbsp;&nbsp; Carrito de compras:
+                <button (click)="updateTarjeta()" style="float:right" type="button" class="btn btn-success btn sm">
+                    Finalizar compra
+                </button>
+            </h3>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table" style="width: 100%;">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="text-center">Producto</th>
+                            <th class="text-center">Precio</th>
+                            <th class="text-center">Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let productCart of cart">
+                            <td class="text-center">{{productCart.product.product}}</td>
+                            <td class="text-center">{{productCart.product.price}}</td>
+                            <td class="text-center">{{productCart.quantity}}</td>
+                            <td>
+                                <button (click)="removeFromCart(productCart.id_cart)" type="button" class="btn btn-danger bt-sm">
+                                <i class="fas fa-trash"></i>
+                                Eliminar
+                            </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <h3>
+                <button style="float:right" (click)="deleteCart()" type="button" class="btn btn-warning btn sm">
+                    Vaciar Carrito
+                </button>
+            </h3>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="tarjeta_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Datos Tarjeta</h5>
+                <button (click)="closeModalPurchase()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="formTarjeta" (ngSubmit)="onSubmitPurchase()">
+                    <div class="form-group">
+                        <label for="rate">Ingresa el número de tarjeta<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="numTarjeta" formControlName="numTarjeta" required pattern="[0-9]{16}|(([0-9]{4}\s){3}[0-9]{3,4})" title="Unicamente 16 digitos">
+                        <div *ngIf="submitted && f.numTarjeta.errors">
+                            <div *ngIf="f.numTarjeta.errors.required">
+                                <span class="text-danger">El número de tarjeta es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingresa el número CCV <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control marginForm" id="ccv" formControlName="ccv" minlength="3" maxlength="3" required pattern="[0-9]{3}" title="Unicamente 3 digitos">
+                        <div *ngIf="submitted && f.ccv.errors">
+                            <div *ngIf="f.ccv.errors.required">
+                                <span class="text-danger">El número CCV es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Ingrese la fecha de vencimiento de la tarjeta<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control marginForm" id="mesvencimiento" formControlName="mesvencimiento" min="2023-01-01" required>
+                        <div *ngIf="submitted && f.mesvencimiento.errors">
+                            <div *ngIf="f.mesvencimiento.errors.required">
+                                <span class="text-danger">La fecha de vencimiento  es obligatorio </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <br>
+                        <p class="text-rigth"><span class="text-danger">*</span>Campos obligatorios</p>
+                        <button type="submit" class="btn btn-success btn-block">Comprar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button (click)="closeModalPurchase()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
